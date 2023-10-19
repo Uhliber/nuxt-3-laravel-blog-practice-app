@@ -1,5 +1,6 @@
 <template>
   <div class="bg-gray-100 min-h-screen text-gray-900">
+    <Title>{{ title }}</Title>
     <nav class="bg-white shadow text-lg px-6 py-6">
       <div class="container mx-auto flex items-center justify-between px-6">
         <div>
@@ -15,6 +16,14 @@
                 exact-active-class="font-bold"
               >
                 Home
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/create"
+                exact-active-class="font-bold"
+              >
+                Create
               </NuxtLink>
             </li>
             <li>
@@ -43,10 +52,8 @@
   </div>
 </template>
 
-<script>
-  export default {
-    
-  }
+<script setup>
+const title = useState('title', () => 'Nuxt 3 Laravel');
 </script>
 
 <style lang="scss" scoped>
