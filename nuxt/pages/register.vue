@@ -127,6 +127,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: ['guest']
+})
+
 const name = ref('');
 const email = ref('');
 const password = ref('');
@@ -157,6 +161,11 @@ const register = async () => {
         password_confirmation: passwordConfirmation.value,
       }
     })
+
+    const user = await $apiFetch('/api/user');
+    const { setUser } = useAuth();
+    setUser(user);
+
     name.value = '';
     passwordConfirmation.value = '';
     email.value = '';

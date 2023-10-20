@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <ClientOnly>
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
         Sign in to your account
@@ -87,10 +87,14 @@
         </div>
       </form>
     </div>
-  </div>
+  </ClientOnly>
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: ['guest']
+})
+
 const email = ref('');
 const password = ref('');
 const isLoading = ref(false);
@@ -117,6 +121,10 @@ const login = async () => {
         password: password.value,
       }
     })
+
+    const user = await $apiFetch('/api/user');
+    const { setUser } = useAuth();
+    setUser(user);
 
     email.value = '';
     password.value = '';
