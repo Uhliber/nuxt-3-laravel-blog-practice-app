@@ -66,6 +66,14 @@
                 Contact
               </NuxtLink>
             </li>
+            <li>
+              <a
+                href="#"
+                @click="logout()"
+              >
+                Logout
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -78,8 +86,18 @@
 
 <script setup>
 const title = useState('title', () => 'Nuxt 3 Laravel');
+
+const { $apiFetch } = useNuxtApp();
+
+const logout = async () => {
+  try {
+    await $apiFetch('/logout', {
+      method: 'POST'
+    })
+
+    window.location.pathname = '/'
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
-
-<style lang="scss" scoped>
-
-</style>

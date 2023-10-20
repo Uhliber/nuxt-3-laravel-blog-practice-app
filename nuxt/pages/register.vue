@@ -6,14 +6,11 @@
       </h2>
     </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm rounded-md bg-red-50 p-4">
+    <div
+      v-if="errors.length > 0"
+      class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm rounded-md bg-red-50 p-4"
+    >
       <div class="flex">
-        <div class="flex-shrink-0">
-          <XCircleIcon
-            class="h-5 w-5 text-red-400"
-            aria-hidden="true"
-          />
-        </div>
         <div class="ml-3">
           <h3 class="text-sm font-medium text-red-800">
             Registration failed
@@ -23,8 +20,12 @@
               role="list"
               class="list-disc space-y-1 pl-5"
             >
-              <li>Your password must be at least 8 characters</li>
-              <li>Your password must include at least one pro wrestling finishing move</li>
+              <li
+                v-for="(error, index) in errors"
+                :key="index"
+              >
+                {{ error }}
+              </li>
             </ul>
           </div>
         </div>
@@ -36,6 +37,7 @@
         class="space-y-6"
         action="#"
         method="POST"
+        @submit.prevent="register"
       >
         <div>
           <label
@@ -45,11 +47,11 @@
           <div class="mt-2">
             <input
               id="name"
+              v-model="name"
               name="name"
               type="text"
               autocomplete="name"
-              required=""
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
           </div>
         </div>
@@ -62,11 +64,11 @@
           <div class="mt-2">
             <input
               id="email"
+              v-model="email"
               name="email"
               type="email"
               autocomplete="email"
-              required=""
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
           </div>
         </div>
@@ -81,11 +83,11 @@
           <div class="mt-2">
             <input
               id="password"
+              v-model="password"
               name="password"
               type="password"
               autocomplete="current-password"
-              required=""
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
           </div>
         </div>
@@ -99,12 +101,12 @@
           </div>
           <div class="mt-2">
             <input
-              id="confirm-password"
-              name="confirm_password"
+              id="password-confirmation"
+              v-model="passwordConfirmation"
+              name="password_confirmation"
               type="password"
               autocomplete="confirm-password"
-              required=""
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             >
           </div>
         </div>
@@ -113,6 +115,8 @@
           <button
             type="submit"
             class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            :class="{ 'bg-slate-400 text-slate-900 hover:bg-slate-400 cursor-not-allowed': isLoading }"
+            :disabled="isLoading"
           >
             Register
           </button>
@@ -122,12 +126,47 @@
   </div>
 </template>
 
-<script>
-  export default {
-    
+<script setup>
+const name = ref('');
+const email = ref('');
+const password = ref('');
+const passwordConfirmation = ref('');
+const isLoading = ref(false);
+const errors = ref([]);
+
+// const router = useRouter();
+const { $apiFetch } = useNuxtApp();
+
+const csrf = () => {
+  return $apiFetch('/sanctum/csrf-cookie')
+}
+
+const register = async () => {
+  isLoading.value = true;
+  errors.value = [];
+
+  try {
+    await csrf();
+
+    await $apiFetch('/register', {
+      method: 'POST',
+      body: {
+        name: name.value,
+        email: email.value,
+        password: password.value,
+        password_confirmation: passwordConfirmation.value,
+      }
+    })
+    name.value = '';
+    passwordConfirmation.value = '';
+    email.value = '';
+    password.value = '';
+
+    window.location.pathname = '/my-info'
+  } catch (error) {
+    errors.value = Object.values(error.data.errors).flat();
+  } finally {
+    isLoading.value = false;
   }
+}
 </script>
-
-<style lang="scss" scoped>
-
-</style>
