@@ -1,16 +1,38 @@
 <template>
   <div class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2 max-w-2xl mx-auto">
-    <ul
+    <div
       v-if="errors.length > 0"
-      class="px-4 pt-4 sm:px-8 text-red-600 text-sm"
+      class="pt-4 px-4 sm:px-8 sm:pt-8"
     >
-      <li
-        v-for="(error, index) in errors"
-        :key="`error-${index}`"
-      >
-        {{ error }}
-      </li>
-    </ul>
+      <div class="rounded-md bg-red-50 p-4">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <XCircleIcon
+              class="h-5 w-5 text-red-400"
+              aria-hidden="true"
+            />
+          </div>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-red-800">
+              Post creation failed
+            </h3>
+            <div class="mt-2 text-sm text-red-700">
+              <ul
+                role="list"
+                class="list-disc space-y-1 pl-5"
+              >
+                <li
+                  v-for="(error, index) in errors"
+                  :key="`error-${index}`"
+                >
+                  {{ error }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <form
       action="#"
       @submit.prevent="createPost"

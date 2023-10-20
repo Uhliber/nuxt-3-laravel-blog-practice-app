@@ -20,6 +20,30 @@
             </li>
             <li>
               <NuxtLink
+                to="/login"
+                exact-active-class="font-bold"
+              >
+                Login
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/register"
+                exact-active-class="font-bold"
+              >
+                Register
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
+                to="/my-info"
+                exact-active-class="font-bold"
+              >
+                My Info
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink
                 to="/create"
                 exact-active-class="font-bold"
               >
