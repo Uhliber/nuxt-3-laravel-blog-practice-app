@@ -76,7 +76,7 @@
                 </a>
               </li>
               <li v-if="isLoggedIn">
-                {{ getUser().name }}
+                {{ getUser()?.name }}
               </li>
             </ul>
           </ClientOnly>
