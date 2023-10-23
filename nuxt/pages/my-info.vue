@@ -69,6 +69,14 @@
                   </p>
                 </div>
               </div>
+              <div class="flex gap-4">
+                <NuxtLink
+                  :to="`/posts/${post.id}/edit`"
+                  class="text-sm"
+                >
+                  Manage
+                </NuxtLink>
+              </div>
             </li>
           </ul>
         </div>

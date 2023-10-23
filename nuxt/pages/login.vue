@@ -134,7 +134,7 @@ const login = async () => {
     // There are instances that using router.push after authentication gives unexpected behavior
     // so we do a redirect with a full page reload
 
-    window.location.pathname = '/my-info'
+    window.location.pathname = '/my-info';
   } catch (error) {
     errors.value = Object.values(error.data.errors).flat();
   } finally {

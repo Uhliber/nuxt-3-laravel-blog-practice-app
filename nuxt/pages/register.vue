@@ -171,7 +171,7 @@ const register = async () => {
     email.value = '';
     password.value = '';
 
-    window.location.pathname = '/my-info'
+    window.location.pathname = '/my-info';
   } catch (error) {
     errors.value = Object.values(error.data.errors).flat();
   } finally {

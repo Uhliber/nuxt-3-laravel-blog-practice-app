@@ -101,7 +101,7 @@ const logout = async () => {
       method: 'POST'
     })
     removeUser();
-    window.location.pathname = '/'
+    window.location.pathname = '/my-info';
   } catch (error) {
     console.log(error);
   }
